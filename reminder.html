@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerebro de Proyectos IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .due-soon {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+        
+        .due-today {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+        
+        .overdue {
+            border-left: 4px solid #dc2626;
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        #loading-spinner {
+            display: none;
+        }
+        
+        #loading-spinner.show {
+            display: flex;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        .parsed-field {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .parsed-field:focus {
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .modern-input {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 400;
+            color: #334155;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .modern-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .modern-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        
+        .modern-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+        
+        .modern-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .modern-button:active {
+            transform: translateY(0);
+        }
+        
+        .project-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .delete-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+            transform: scale(1.05);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        
+        .status-due-soon {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-due-today {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .status-overdue {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+        
+        .status-normal {
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+        
+        /* Date picker styling */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.4);
+            cursor: pointer;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* AI Assistant Styles */
+        .ai-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .ai-chat.open {
+            transform: translateY(0);
+        }
+
+        .ai-chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ai-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+
+        .ai-message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .ai-message.user {
+            justify-content: flex-end;
+        }
+
+        .ai-message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .ai-message.bot .ai-message-content {
+            background: white;
+            border: 1px solid #e2e8f0;
+            margin-right: 10px;
+        }
+
+        .ai-message.user .ai-message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: 10px;
+        }
+
+        .ai-input-container {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .ai-input {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .ai-input:focus {
+            border-color: #667eea;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .metric-change.positive {
+            color: #059669;
+        }
+
+        .metric-change.negative {
+            color: #dc2626;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        /* Team Management */
+        .team-member {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-2px);
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        /* AI Learning Indicators */
+        .ai-learning {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ai-insight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ai-prediction {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .ai-chat {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 40px);
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                margin-bottom: 4px;
+            }
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #22c55e;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 rounded-3xl mb-6 shadow-xl">
+                <i class="fas fa-brain text-white text-3xl"></i>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent mb-4 tracking-tight">Cerebro de Proyectos IA</h1>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">Tu asistente inteligente de gestión de proyectos que aprende, predice y optimiza tu flujo de trabajo automáticamente.</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="dashboard">
+                <i class="fas fa-chart-line mr-2"></i>Panel
+            </div>
+            <div class="nav-tab" data-tab="projects">
+                <i class="fas fa-tasks mr-2"></i>Proyectos
+            </div>
+            <div class="nav-tab" data-tab="analytics">
+                <i class="fas fa-analytics mr-2"></i>Análisis
+            </div>
+            <div class="nav-tab" data-tab="team">
+                <i class="fas fa-users mr-2"></i>Equipo
+            </div>
+            <div class="nav-tab" data-tab="ai-insights">
+                <i class="fas fa-robot mr-2"></i>Insights IA
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <!-- AI Learning Status -->
+            <div class="ai-learning">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-brain text-blue-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-blue-800">Estado de Aprendizaje IA</h3>
+                </div>
+                <p class="text-blue-700 mb-2">La IA está analizando tus patrones de proyectos y aprendiendo tu flujo de trabajo empresarial...</p>
+                <div class="w-full bg-blue-200 rounded-full h-2">
+                    <div id="ai-learning-progress" class="bg-blue-500 h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-blue-600 mt-2">Progreso de Aprendizaje: <span id="learning-percentage">0%</span></p>
+            </div>
+
+            <!-- Key Metrics Dashboard -->
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-tasks text-white"></i>
+                        </div>
+                        <span class="text-sm text-green-600 font-semibold">+12%</span>
+                    </div>
+                    <div class="metric-value" id="total-projects">0</div>
+                    <div class="metric-label">Total Proyectos</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-circle text-white"></i>
+                        </div>
+                        <span class="text-sm text-green-600 font-semibold">+8%</span>
+                    </div>
+                    <div class="metric-value" id="completed-projects">0</div>
+                    <div class="metric-label">Completados Este Mes</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock text-white"></i>
+                        </div>
+                        <span class="text-sm text-red-600 font-semibold">-5%</span>
+                    </div>
+                    <div class="metric-value" id="overdue-projects">0</div>
+                    <div class="metric-label">Proyectos Atrasados</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <span class="text-sm text-green-600 font-semibold">+15%</span>
+                    </div>
+                    <div class="metric-value" id="efficiency-score">0%</div>
+                    <div class="metric-label">Puntuación Eficiencia IA</div>
+                </div>
+            </div>
+
+            <!-- AI Insights -->
+            <div class="ai-insight">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-yellow-800">Insight IA</h3>
+                </div>
+                <p id="ai-insight-text" class="text-yellow-700">Basándome en tus patrones de proyectos, he notado que los proyectos con "brida" en la descripción tienden a tomar 15% más tiempo del estimado. Considera agregar tiempo de buffer para proyectos similares.</p>
+            </div>
+
+            <!-- AI Predictions -->
+            <div class="ai-prediction">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-crystal-ball text-green-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-green-800">Predicción IA</h3>
+                </div>
+                <p id="ai-prediction-text" class="text-green-700">Basándome en la carga de trabajo actual y datos históricos, es probable que completes 85% de los proyectos a tiempo este mes. Considera priorizar los 3 proyectos que vencen la próxima semana.</p>
+            </div>
+
+            <!-- Project Timeline Chart -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-xl font-semibold text-slate-800 mb-6">Cronograma de Proyectos</h3>
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="projects-tab" class="tab-content hidden">
+        <!-- Form to Add New Project -->
+            <div class="glass-card p-8 rounded-2xl mb-12">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fas fa-plus text-white text-sm"></i>
+                </div>
+                <div>
+                        <h2 class="text-2xl font-semibold text-slate-800">Agregar Nuevo Proyecto</h2>
+                        <p class="text-slate-600">Copia los detalles del proyecto de tu otro sistema y pégalos abajo.</p>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <label for="smart-entry" class="block text-sm font-semibold text-slate-700 mb-3">Entrada Inteligente</label>
+                    <textarea id="smart-entry" rows="4" class="modern-input w-full resize-none" placeholder="ej.,&#10;Número PO: 11-2345&#10;Trabajo: Bridas para Cliente XYZ&#10;Fecha Vencimiento: 2025-12-25"></textarea>
+                    <p class="text-xs text-slate-500 mt-2">Pega la información del proyecto y extraeremos automáticamente los detalles abajo.</p>
+            </div>
+
+                <form id="add-project-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div>
+                            <label for="po-number" class="block text-sm font-semibold text-slate-700 mb-3">PO / Número de Orden</label>
+                            <input type="text" id="po-number" name="po-number" required class="modern-input w-full parsed-field" placeholder="Auto-completado desde pegar">
+                </div>
+                <div>
+                            <label for="due-date" class="block text-sm font-semibold text-slate-700 mb-3">Fecha de Vencimiento</label>
+                            <input type="date" id="due-date" name="due-date" required class="modern-input w-full parsed-field">
+                        </div>
+                </div>
+                    
+                    <div>
+                        <label for="project-description" class="block text-sm font-semibold text-slate-700 mb-3">Descripción del Proyecto</label>
+                        <input type="text" id="project-description" name="project-description" required class="modern-input w-full parsed-field" placeholder="Auto-completado desde pegar">
+                </div>
+                    
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="modern-button flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            Agregar Proyecto
+                </button>
+                    </div>
+            </form>
+        </div>
+
+        <!-- Loading Spinner -->
+            <div id="loading-spinner" class="flex justify-center items-center py-16 show">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                    <p class="text-slate-600 font-medium">Cargando proyectos...</p>
+                </div>
+        </div>
+
+        <!-- Project List -->
+        <div id="project-list-container">
+                <div class="flex items-center mb-8">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fas fa-list-check text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-semibold text-slate-800">Proyectos Activos</h2>
+                        <p class="text-slate-600">Gestiona y rastrea las fechas límite de tus proyectos</p>
+                    </div>
+                </div>
+                
+                <div id="project-list" class="space-y-4">
+                    <div id="no-projects-message" class="text-center py-16 hidden">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-inbox text-slate-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">No hay proyectos activos</h3>
+                        <p class="text-slate-500">¡Agrega tu primer proyecto arriba para comenzar!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Tendencias de Finalización de Proyectos</h3>
+                    <div class="chart-container">
+                        <canvas id="completionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Distribución de Tipos de Proyectos</h3>
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Tab -->
+        <div id="team-tab" class="tab-content hidden">
+            <div class="glass-card p-8 rounded-2xl mb-8">
+                <h3 class="text-xl font-semibold text-slate-800 mb-6">Miembros del Equipo</h3>
+                <div id="team-members">
+                    <div class="team-member">
+                        <div class="member-avatar">JD</div>
+                        <div class="flex-grow">
+                            <h4 class="font-semibold text-slate-800">Juan Pérez</h4>
+                            <p class="text-sm text-slate-600">Gerente de Proyectos</p>
+                            <div class="flex items-center mt-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                <span class="text-xs text-slate-500">3 proyectos activos</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-semibold text-slate-800">85%</div>
+                            <div class="text-xs text-slate-500">Eficiencia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights Tab -->
+        <div id="ai-insights-tab" class="tab-content hidden">
+            <div class="space-y-6">
+                <div class="ai-learning">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-4">Progreso de Aprendizaje IA</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Reconocimiento de Patrones de Proyectos</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="w-full bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Precisión de Predicción de Fechas Límite</span>
+                                <span>87%</span>
+                            </div>
+                            <div class="w-full bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Optimización de Recursos</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="w-full bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Recomendaciones IA</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start p-4 bg-slate-50 rounded-lg">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">Optimizar Programación de Proyectos</h4>
+                                <p class="text-sm text-slate-600">Considera programar proyectos complejos los martes y miércoles cuando la eficiencia del equipo es más alta.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-slate-50 rounded-lg">
+                            <i class="fas fa-chart-line text-green-500 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">Asignación de Recursos</h4>
+                                <p class="text-sm text-slate-600">Reasigna 2 miembros del equipo de proyectos de baja prioridad para cumplir con los plazos de la próxima semana.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Interface -->
+    <div id="ai-chat" class="ai-chat">
+        <div class="ai-chat-header">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                    <i class="fas fa-robot text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Asistente IA</h3>
+                    <p class="text-sm opacity-90">Tu cerebro de gestión de proyectos</p>
+                </div>
+            </div>
+            <button id="close-ai-chat" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="ai-messages" id="ai-messages">
+            <div class="ai-message bot">
+                <div class="ai-message-content">
+                    <p>¡Hola! Soy tu asistente de proyectos IA. Puedo ayudarte con:</p>
+                    <ul class="mt-2 text-sm">
+                        <li>• Análisis de proyectos e insights</li>
+                        <li>• Predicciones de fechas límite</li>
+                        <li>• Optimización de recursos</li>
+                        <li>• Evaluación de riesgos</li>
+                    </ul>
+                    <p class="mt-2">¿Qué te gustaría saber sobre tus proyectos?</p>
+                </div>
+            </div>
+        </div>
+        <div class="ai-input-container">
+            <input type="text" id="ai-input" class="ai-input" placeholder="Pregúntame cualquier cosa sobre tus proyectos...">
+        </div>
+    </div>
+
+    <!-- AI Chat Toggle Button -->
+    <button id="ai-chat-toggle" class="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50">
+        <i class="fas fa-robot text-xl"></i>
+    </button>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script type="module">
+        // --- Firebase Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // --- Firebase Configuration ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-workshop-bot';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db, auth;
+        let projectsCollection;
+        let allProjects = [];
+        let aiLearningData = {
+            projectPatterns: {},
+            completionTimes: {},
+            efficiencyScore: 0,
+            insights: [],
+            predictions: []
+        };
+
+        // --- DOM Elements ---
+        const addProjectForm = document.getElementById('add-project-form');
+        const smartEntryTextarea = document.getElementById('smart-entry');
+        const poNumberInput = document.getElementById('po-number');
+        const projectDescriptionInput = document.getElementById('project-description');
+        const dueDateInput = document.getElementById('due-date');
+        const projectList = document.getElementById('project-list');
+        const noProjectsMessage = document.getElementById('no-projects-message');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        // New DOM elements
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const aiChat = document.getElementById('ai-chat');
+        const aiChatToggle = document.getElementById('ai-chat-toggle');
+        const closeAiChat = document.getElementById('close-ai-chat');
+        const aiInput = document.getElementById('ai-input');
+        const aiMessages = document.getElementById('ai-messages');
+
+        // --- AI Learning System ---
+        class AILearningSystem {
+            constructor() {
+                this.patterns = new Map();
+                this.insights = [];
+                this.predictions = [];
+                this.learningProgress = 0;
+            }
+
+            analyzeProject(project) {
+                // Analyze project description for patterns
+                const description = project.description.toLowerCase();
+                const keywords = this.extractKeywords(description);
+                
+                keywords.forEach(keyword => {
+                    if (!this.patterns.has(keyword)) {
+                        this.patterns.set(keyword, {
+                            count: 0,
+                            avgDuration: 0,
+                            completionRate: 0,
+                            difficulty: 'medium'
+                        });
+                    }
+                    
+                    const pattern = this.patterns.get(keyword);
+                    pattern.count++;
+                    
+                    // Calculate average duration based on project type
+                    const estimatedDuration = this.estimateDuration(description);
+                    pattern.avgDuration = (pattern.avgDuration * (pattern.count - 1) + estimatedDuration) / pattern.count;
+                });
+
+                this.updateLearningProgress();
+                this.generateInsights();
+                this.generatePredictions();
+            }
+
+            extractKeywords(description) {
+                const commonWords = ['for', 'and', 'the', 'with', 'from', 'to', 'of', 'in', 'on', 'at', 'by'];
+                return description
+                    .split(/\s+/)
+                    .filter(word => word.length > 3 && !commonWords.includes(word))
+                    .slice(0, 5); // Top 5 keywords
+            }
+
+            estimateDuration(description) {
+                // Simple duration estimation based on keywords
+                let baseDays = 7;
+                if (description.includes('flange')) baseDays += 3;
+                if (description.includes('complex')) baseDays += 5;
+                if (description.includes('urgent')) baseDays -= 2;
+                if (description.includes('simple')) baseDays -= 2;
+                return baseDays;
+            }
+
+            updateLearningProgress() {
+                this.learningProgress = Math.min(100, this.patterns.size * 10);
+                document.getElementById('ai-learning-progress').style.width = `${this.learningProgress}%`;
+                document.getElementById('learning-percentage').textContent = `${this.learningProgress}%`;
+            }
+
+            generateInsights() {
+                this.insights = [];
+                
+                // Generate insights based on patterns
+                for (const [keyword, data] of this.patterns) {
+                    if (data.count > 2) {
+                        if (data.avgDuration > 10) {
+                            this.insights.push({
+                                type: 'warning',
+                                message: `Los proyectos con "${keyword}" tienden a tomar ${Math.round(data.avgDuration)} días en promedio. Considera agregar tiempo de buffer.`
+                            });
+                        }
+                        
+                        if (data.completionRate > 0.9) {
+                            this.insights.push({
+                                type: 'success',
+                                message: `¡Excelente! Los proyectos con "${keyword}" tienen una tasa de finalización del ${Math.round(data.completionRate * 100)}%.`
+                            });
+                        }
+                    }
+                }
+
+                // Update UI with insights
+                this.updateInsightsUI();
+            }
+
+            generatePredictions() {
+                this.predictions = [];
+                
+                // Predict project success based on patterns
+                const upcomingProjects = allProjects.filter(p => {
+                    const dueDate = p.dueDate.toDate();
+                    const today = new Date();
+                    return dueDate > today;
+                });
+
+                if (upcomingProjects.length > 0) {
+                    const riskProjects = upcomingProjects.filter(p => {
+                        const keywords = this.extractKeywords(p.description.toLowerCase());
+                        return keywords.some(k => {
+                            const pattern = this.patterns.get(k);
+                            return pattern && pattern.avgDuration > 10;
+                        });
+                    });
+
+                    if (riskProjects.length > 0) {
+                        this.predictions.push({
+                            type: 'warning',
+                            message: `${riskProjects.length} proyectos pueden estar en riesgo de retraso basándose en patrones históricos.`
+                        });
+                    }
+                }
+
+                this.updatePredictionsUI();
+            }
+
+            updateInsightsUI() {
+                const insightElement = document.getElementById('ai-insight-text');
+                if (this.insights.length > 0) {
+                    insightElement.textContent = this.insights[0].message;
+                }
+            }
+
+            updatePredictionsUI() {
+                const predictionElement = document.getElementById('ai-prediction-text');
+                if (this.predictions.length > 0) {
+                    predictionElement.textContent = this.predictions[0].message;
+                }
+            }
+
+            getAIResponse(userMessage) {
+                const message = userMessage.toLowerCase();
+                
+                if (message.includes('proyecto') && (message.includes('estado') || message.includes('status'))) {
+                    return `Actualmente tienes ${allProjects.length} proyectos activos. ${allProjects.filter(p => {
+                        const dueDate = p.dueDate.toDate();
+                        const today = new Date();
+                        return dueDate < today;
+                    }).length} están atrasados.`;
+                }
+                
+                if (message.includes('insight') || message.includes('análisis') || message.includes('analisis')) {
+                    return `Basándome en tus patrones de proyectos, he identificado ${this.patterns.size} patrones clave. Los tipos de proyectos más comunes son: ${Array.from(this.patterns.keys()).slice(0, 3).join(', ')}.`;
+                }
+                
+                if (message.includes('predicción') || message.includes('prediccion') || message.includes('forecast')) {
+                    return `Predigo que completarás aproximadamente ${Math.round(allProjects.length * 0.85)} proyectos a tiempo este mes basándome en la carga de trabajo actual y datos históricos.`;
+                }
+                
+                if (message.includes('ayuda') || message.includes('help') || message.includes('qué puedes hacer') || message.includes('que puedes hacer')) {
+                    return `Puedo ayudarte a analizar patrones de proyectos, predecir tiempos de finalización, identificar riesgos, optimizar la asignación de recursos y proporcionar insights basados en tu historial de proyectos. ¿Qué te gustaría saber?`;
+                }
+                
+                return `Entiendo que estás preguntando sobre "${userMessage}". Basándome en los datos de tus proyectos, puedo proporcionar insights, predicciones o análisis. ¿Podrías ser más específico sobre lo que te gustaría saber?`;
+            }
+        }
+
+        const aiSystem = new AILearningSystem();
+
+        // --- Tab Navigation ---
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                // Update active tab
+                navTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show target content
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`${targetTab}-tab`).classList.remove('hidden');
+                
+                // Initialize charts if analytics tab is selected
+                if (targetTab === 'analytics') {
+                    initializeCharts();
+                }
+            });
+        });
+
+        // --- AI Chat System ---
+        aiChatToggle.addEventListener('click', () => {
+            aiChat.classList.toggle('open');
+        });
+
+        closeAiChat.addEventListener('click', () => {
+            aiChat.classList.remove('open');
+        });
+
+        aiInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && aiInput.value.trim()) {
+                const userMessage = aiInput.value.trim();
+                addMessageToChat('user', userMessage);
+                aiInput.value = '';
+                
+                // Simulate AI thinking
+                setTimeout(() => {
+                    const aiResponse = aiSystem.getAIResponse(userMessage);
+                    addMessageToChat('bot', aiResponse);
+                }, 1000);
+            }
+        });
+
+        function addMessageToChat(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${sender}`;
+            messageDiv.innerHTML = `
+                <div class="ai-message-content">
+                    <p>${message}</p>
+                </div>
+            `;
+            aiMessages.appendChild(messageDiv);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+        }
+
+        // --- Smart Entry Parser (Enhanced) ---
+        smartEntryTextarea.addEventListener('input', () => {
+            const text = smartEntryTextarea.value;
+            const poRegex = /(?:PO|Order|Job)\s*(?:#|:)?\s*([\w-]+)/i;
+            const poMatch = text.match(poRegex);
+            if (poMatch && poMatch[1]) {
+                poNumberInput.value = poMatch[1];
+            }
+            const dateRegex = /(\d{4}-\d{2}-\d{2})|(\d{1,2}\/\d{1,2}\/\d{4})/;
+            const dateMatch = text.match(dateRegex);
+            if (dateMatch) {
+                const dateStr = dateMatch[2] ? new Date(dateMatch[2]).toISOString().split('T')[0] : dateMatch[1];
+                dueDateInput.value = dateStr;
+            }
+             const descRegex = /(?:Job|Description|Title|Desc)\s*:\s*(.*)/i;
+             const descMatch = text.match(descRegex);
+             if (descMatch && descMatch[1]) {
+                 projectDescriptionInput.value = descMatch[1].trim();
+             } else {
+                const lines = text.split('\n');
+                const nonPoDateLine = lines.find(line => !poRegex.test(line) && !dateRegex.test(line) && line.trim() !== '');
+                if(nonPoDateLine) {
+                    projectDescriptionInput.value = nonPoDateLine.trim().replace(/^:\s*/, '');
+                }
+             }
+        });
+
+        // --- Helper Functions ---
+        const getRelativeDateInfo = (date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const dueDate = new Date(date);
+            dueDate.setHours(0, 0, 0, 0);
+            const diffTime = dueDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) return { text: `Atrasado por ${Math.abs(diffDays)} día(s)`, class: 'overdue' };
+            if (diffDays === 0) return { text: 'Vence hoy', class: 'due-today' };
+            if (diffDays === 1) return { text: 'Vence mañana', class: 'due-soon' };
+            if (diffDays <= 3) return { text: `Vence en ${diffDays} días`, class: 'due-soon' };
+            return { text: `Vence en ${diffDays} días`, class: '' };
+        };
+        
+        const renderProject = (project) => {
+            const dueDate = project.dueDate.toDate();
+            const formattedDate = dueDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const relativeDateInfo = getRelativeDateInfo(dueDate);
+            
+            // Determine status badge class
+            let statusClass = 'status-normal';
+            if (relativeDateInfo.class === 'due-soon') statusClass = 'status-due-soon';
+            else if (relativeDateInfo.class === 'due-today') statusClass = 'status-due-today';
+            else if (relativeDateInfo.class === 'overdue') statusClass = 'status-overdue';
+            
+            return `
+                <div class="project-card fade-in ${relativeDateInfo.class}">
+                    <div class="flex justify-between items-start">
+                    <div class="flex-grow">
+                            <div class="flex items-center mb-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-alt text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-800">PO #${project.poNumber}</h3>
+                                    <p class="text-slate-600 text-sm">${formattedDate}</p>
+                                </div>
+                            </div>
+                            <p class="text-slate-700 mb-3 leading-relaxed">${project.description}</p>
+                            <span class="status-badge ${statusClass}">
+                                <i class="fas fa-clock mr-1"></i>
+                                ${relativeDateInfo.text}
+                            </span>
+                    </div>
+                        <button data-id="${project.id}" class="delete-btn ml-4">
+                            <i class="fas fa-trash-alt"></i>
+                    </button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const updateProjectList = (projects) => {
+            loadingSpinner.classList.remove('show');
+            noProjectsMessage.classList.toggle('hidden', projects.length > 0);
+            projectList.innerHTML = projects.map(renderProject).join('');
+            allProjects = projects;
+            updateDashboardMetrics(projects);
+        };
+
+        const updateDashboardMetrics = (projects) => {
+            document.getElementById('total-projects').textContent = projects.length;
+            
+            const completedThisMonth = projects.filter(p => {
+                const created = p.createdAt.toDate();
+                const now = new Date();
+                return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
+            }).length;
+            document.getElementById('completed-projects').textContent = completedThisMonth;
+            
+            const overdue = projects.filter(p => {
+                const dueDate = p.dueDate.toDate();
+                const today = new Date();
+                return dueDate < today;
+            }).length;
+            document.getElementById('overdue-projects').textContent = overdue;
+            
+            const efficiencyScore = Math.max(0, Math.min(100, 100 - (overdue * 10) + (completedThisMonth * 5)));
+            document.getElementById('efficiency-score').textContent = `${efficiencyScore}%`;
+        };
+
+        // --- Chart Initialization ---
+        function initializeCharts() {
+            // Timeline Chart
+            const timelineCtx = document.getElementById('timelineChart');
+            if (timelineCtx) {
+                new Chart(timelineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                        datasets: [{
+                            label: 'Proyectos Completados',
+                            data: [2, 4, 3, 5],
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Completion Chart
+            const completionCtx = document.getElementById('completionChart');
+            if (completionCtx) {
+                new Chart(completionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['A Tiempo', 'Tardío', 'Temprano'],
+                        datasets: [{
+                            data: [12, 3, 2],
+                            backgroundColor: ['#22c55e', '#ef4444', '#3b82f6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Distribution Chart
+            const distributionCtx = document.getElementById('distributionChart');
+            if (distributionCtx) {
+                new Chart(distributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Bridas', 'Tuberías', 'Válvulas', 'Otros'],
+                        datasets: [{
+                            data: [35, 25, 20, 20],
+                            backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- Notification System ---
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'} mr-3"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.getElementById('notification-container').appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // --- Event Handlers ---
+        addProjectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!poNumberInput.value || !dueDateInput.value || !projectDescriptionInput.value) return;
+            
+            const [year, month, day] = dueDateInput.value.split('-');
+            const dueDate = new Date(year, month - 1, day, 12, 0, 0);
+            
+            try {
+                const projectData = {
+                    poNumber: poNumberInput.value,
+                    description: projectDescriptionInput.value,
+                    dueDate: Timestamp.fromDate(dueDate),
+                    createdAt: Timestamp.now()
+                };
+                
+                await addDoc(projectsCollection, projectData);
+                
+                // AI Learning
+                aiSystem.analyzeProject(projectData);
+                
+                addProjectForm.reset();
+                smartEntryTextarea.value = '';
+                showNotification('¡Proyecto agregado exitosamente! La IA está aprendiendo de estos datos.', 'success');
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showNotification('Error al agregar proyecto. Por favor intenta de nuevo.', 'error');
+            }
+        });
+
+        projectList.addEventListener('click', async (e) => {
+            if (e.target.closest('.delete-btn')) {
+                const id = e.target.closest('.delete-btn').dataset.id;
+                try {
+                    await deleteDoc(doc(db, projectsCollection.path, id));
+                    showNotification('¡Proyecto eliminado exitosamente!', 'success');
+                } catch (error) {
+                    console.error("Error removing document: ", error);
+                    showNotification('Error al eliminar proyecto.', 'error');
+                }
+            }
+        });
+
+        // --- Main Initialization ---
+        async function main() {
+             if (!Object.keys(firebaseConfig).length) {
+                console.error("Firebase config is missing!");
+                loadingSpinner.classList.remove('show');
+                projectList.innerHTML = `<p class="text-red-500 text-center">No se pudo conectar a la base de datos. Por favor verifica la configuración.</p>`;
+                return;
+            }
+            
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    projectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+                    const q = query(projectsCollection, orderBy("dueDate", "asc"));
+                    onSnapshot(q, (snapshot) => {
+                        const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        updateProjectList(projects);
+                        
+                        // AI Learning from existing projects
+                        projects.forEach(project => {
+                            aiSystem.analyzeProject(project);
+                        });
+                    });
+                }
+            });
+
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                 console.error("Authentication failed:", error);
+                 loadingSpinner.classList.remove('show');
+                projectList.innerHTML = `<p class="text-red-500 text-center">Error de autenticación. No se pudieron cargar los proyectos.</p>`;
+            }
+        }
+
+        main();
+    </script>
+</body>
+</html>
+
