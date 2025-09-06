@@ -530,6 +530,9 @@
             <div class="nav-tab" data-tab="ai-insights">
                 <i class="fas fa-robot mr-2"></i>Insights IA
             </div>
+            <div class="nav-tab" data-tab="knowledge-base">
+                <i class="fas fa-cogs mr-2"></i>Base de Conocimiento
+            </div>
         </div>
 
         <!-- Dashboard Tab -->
@@ -799,6 +802,194 @@
                 </div>
             </div>
         </div>
+
+        <!-- Knowledge Base Tab -->
+        <div id="knowledge-base-tab" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- Workshop Overview -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-industry text-white"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-semibold text-slate-800">Conocimiento del Taller</h2>
+                            <p class="text-slate-600">Información sobre equipos y tipos de proyectos de mecanizado</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Lathe -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-blue-100 hover:border-blue-300 transition-colors">
+                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-circle-notch text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Torno</h3>
+                            <p class="text-sm text-slate-600 mb-3">Mecanizado de piezas cilíndricas y cónicas</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Ejes y pernos</li>
+                                <li>• Bridas circulares</li>
+                                <li>• Casquillos y bujes</li>
+                                <li>• Roscas internas/externas</li>
+                            </ul>
+                        </div>
+
+                        <!-- Milling Machine -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-green-100 hover:border-green-300 transition-colors">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-cube text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Fresadora</h3>
+                            <p class="text-sm text-slate-600 mb-3">Mecanizado de superficies planas y complejas</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Ranuras y chaveteros</li>
+                                <li>• Caras planas</li>
+                                <li>• Engranajes</li>
+                                <li>• Formas irregulares</li>
+                            </ul>
+                        </div>
+
+                        <!-- Grinder -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-purple-100 hover:border-purple-300 transition-colors">
+                            <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-circle text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Rectificadora</h3>
+                            <p class="text-sm text-slate-600 mb-3">Acabados de precisión y superficies pulidas</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Superficies de precisión</li>
+                                <li>• Herramientas de corte</li>
+                                <li>• Rodamientos y cojinetes</li>
+                                <li>• Calibres y galgas</li>
+                            </ul>
+                        </div>
+
+                        <!-- CNC -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-indigo-100 hover:border-indigo-300 transition-colors">
+                            <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-microchip text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">CNC</h3>
+                            <p class="text-sm text-slate-600 mb-3">Control numérico computarizado de alta precisión</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Geometrías complejas</li>
+                                <li>• Producción seriada</li>
+                                <li>• Tolerancias estrictas</li>
+                                <li>• Prototipos y moldes</li>
+                            </ul>
+                        </div>
+
+                        <!-- Automation -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-yellow-100 hover:border-yellow-300 transition-colors">
+                            <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Automatización</h3>
+                            <p class="text-sm text-slate-600 mb-3">Sistemas automatizados de producción</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Líneas de producción</li>
+                                <li>• Sistemas de control</li>
+                                <li>• Robots industriales</li>
+                                <li>• Integración de procesos</li>
+                            </ul>
+                        </div>
+
+                        <!-- Workshop Integration -->
+                        <div class="bg-white p-6 rounded-xl border-2 border-gray-100 hover:border-gray-300 transition-colors">
+                            <div class="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-tools text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Integración</h3>
+                            <p class="text-sm text-slate-600 mb-3">Procesos combinados y workflow</p>
+                            <ul class="text-xs text-slate-500 space-y-1">
+                                <li>• Torno + Fresado</li>
+                                <li>• CNC + Rectificado</li>
+                                <li>• Automatización total</li>
+                                <li>• Control de calidad</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Knowledge Input -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-brain text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-800">Agregar Conocimiento Personalizado</h3>
+                            <p class="text-slate-600">Enseña a la IA sobre procesos específicos de tu taller</p>
+                        </div>
+                    </div>
+
+                    <form id="knowledge-input-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="knowledge-category" class="block text-sm font-semibold text-slate-700 mb-3">Categoría</label>
+                                <select id="knowledge-category" class="modern-input w-full" required>
+                                    <option value="">Seleccionar categoría...</option>
+                                    <option value="torno">Torno</option>
+                                    <option value="fresadora">Fresadora</option>
+                                    <option value="rectificadora">Rectificadora</option>
+                                    <option value="cnc">CNC</option>
+                                    <option value="automatizacion">Automatización</option>
+                                    <option value="proceso-general">Proceso General</option>
+                                    <option value="herramientas">Herramientas</option>
+                                    <option value="materiales">Materiales</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="knowledge-topic" class="block text-sm font-semibold text-slate-700 mb-3">Tema/Proceso</label>
+                                <input type="text" id="knowledge-topic" class="modern-input w-full" placeholder="ej: Torneado de acero inoxidable" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="knowledge-content" class="block text-sm font-semibold text-slate-700 mb-3">Conocimiento</label>
+                            <textarea id="knowledge-content" rows="5" class="modern-input w-full resize-none" placeholder="Describe el proceso, parámetros importantes, consejos, tolerancias, etc." required></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="knowledge-difficulty" class="block text-sm font-semibold text-slate-700 mb-3">Dificultad</label>
+                                <select id="knowledge-difficulty" class="modern-input w-full">
+                                    <option value="facil">Fácil</option>
+                                    <option value="medio" selected>Medio</option>
+                                    <option value="dificil">Difícil</option>
+                                    <option value="experto">Experto</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="knowledge-time" class="block text-sm font-semibold text-slate-700 mb-3">Tiempo Estimado (horas)</label>
+                                <input type="number" id="knowledge-time" class="modern-input w-full" placeholder="ej: 4" min="0.5" step="0.5">
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="modern-button flex items-center">
+                                <i class="fas fa-plus mr-2"></i>
+                                Agregar Conocimiento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Knowledge Base Entries -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Conocimientos Almacenados</h3>
+                    <div id="knowledge-entries" class="space-y-4">
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-book text-slate-400 text-xl"></i>
+                            </div>
+                            <p class="text-slate-500">No hay conocimientos personalizados aún</p>
+                            <p class="text-sm text-slate-400">Agrega tu primer conocimiento arriba</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- AI Chat Interface -->
@@ -820,14 +1011,15 @@
         <div class="ai-messages" id="ai-messages">
             <div class="ai-message bot">
                 <div class="ai-message-content">
-                    <p>¡Hola! Soy tu asistente de proyectos IA. Puedo ayudarte con:</p>
+                    <p>¡Hola! Soy tu asistente de taller de mecanizado IA. Puedo ayudarte con:</p>
                     <ul class="mt-2 text-sm">
                         <li>• Análisis de proyectos e insights</li>
-                        <li>• Predicciones de fechas límite</li>
-                        <li>• Optimización de recursos</li>
-                        <li>• Evaluación de riesgos</li>
+                        <li>• Recomendaciones de equipos (Torno, Fresadora, Rectificadora, CNC)</li>
+                        <li>• Procesos de automatización</li>
+                        <li>• Estimación de tiempos y materiales</li>
+                        <li>• Gestión de conocimiento del taller</li>
                     </ul>
-                    <p class="mt-2">¿Qué te gustaría saber sobre tus proyectos?</p>
+                    <p class="mt-2">¿Qué tipo de proyecto de mecanizado tienes en mente?</p>
                 </div>
             </div>
         </div>
@@ -858,12 +1050,57 @@
         let db, auth;
         let projectsCollection;
         let allProjects = [];
+        let customKnowledge = [];
         let aiLearningData = {
             projectPatterns: {},
             completionTimes: {},
             efficiencyScore: 0,
             insights: [],
             predictions: []
+        };
+
+        // Workshop Knowledge Base
+        const workshopKnowledge = {
+            torno: {
+                name: 'Torno',
+                processes: ['torneado exterior', 'torneado interior', 'refrentado', 'roscado', 'ranurado'],
+                materials: ['acero', 'aluminio', 'latón', 'acero inoxidable', 'fundición'],
+                projects: ['ejes', 'pernos', 'bridas', 'casquillos', 'bujes', 'roscas'],
+                timeFactors: { simple: 1.0, medio: 1.5, complejo: 2.5 },
+                defaultTime: 4
+            },
+            fresadora: {
+                name: 'Fresadora',
+                processes: ['fresado frontal', 'fresado periférico', 'ranurado', 'perfilado', 'taladrado'],
+                materials: ['acero', 'aluminio', 'fundición', 'plásticos', 'madera'],
+                projects: ['ranuras', 'chaveteros', 'caras planas', 'engranajes', 'formas irregulares'],
+                timeFactors: { simple: 1.2, medio: 2.0, complejo: 3.5 },
+                defaultTime: 6
+            },
+            rectificadora: {
+                name: 'Rectificadora',
+                processes: ['rectificado plano', 'rectificado cilíndrico', 'rectificado interno', 'afilado'],
+                materials: ['aceros templados', 'carburo', 'cerámicas', 'metal duro'],
+                projects: ['superficies de precisión', 'herramientas de corte', 'calibres', 'galgas'],
+                timeFactors: { simple: 1.8, medio: 2.5, complejo: 4.0 },
+                defaultTime: 8
+            },
+            cnc: {
+                name: 'CNC',
+                processes: ['mecanizado 3D', 'contorneado', 'fresado de cavidades', 'taladrado múltiple'],
+                materials: ['acero', 'aluminio', 'titanio', 'plásticos técnicos', 'compuestos'],
+                projects: ['moldes', 'prototipos', 'piezas complejas', 'series medianas'],
+                timeFactors: { simple: 2.0, medio: 3.0, complejo: 5.0 },
+                defaultTime: 12
+            },
+            automatizacion: {
+                name: 'Automatización',
+                processes: ['programación PLC', 'integración de sistemas', 'robótica', 'control de procesos'],
+                materials: ['sistemas eléctricos', 'sensores', 'actuadores', 'interfaces'],
+                projects: ['líneas de producción', 'sistemas de control', 'robots industriales'],
+                timeFactors: { simple: 3.0, medio: 5.0, complejo: 8.0 },
+                defaultTime: 24
+            }
         };
 
         // --- DOM Elements ---
@@ -885,6 +1122,10 @@
         const aiInput = document.getElementById('ai-input');
         const aiMessages = document.getElementById('ai-messages');
 
+        // Knowledge base elements
+        const knowledgeInputForm = document.getElementById('knowledge-input-form');
+        const knowledgeEntries = document.getElementById('knowledge-entries');
+
         // --- AI Learning System ---
         class AILearningSystem {
             constructor() {
@@ -892,6 +1133,7 @@
                 this.insights = [];
                 this.predictions = [];
                 this.learningProgress = 0;
+                this.workshopKnowledge = workshopKnowledge;
             }
 
             analyzeProject(project) {
@@ -899,21 +1141,25 @@
                 const description = project.description.toLowerCase();
                 const keywords = this.extractKeywords(description);
                 
+                // Classify project by workshop type
+                const projectType = this.classifyProject(description);
+                
                 keywords.forEach(keyword => {
                     if (!this.patterns.has(keyword)) {
                         this.patterns.set(keyword, {
                             count: 0,
                             avgDuration: 0,
                             completionRate: 0,
-                            difficulty: 'medium'
+                            difficulty: 'medium',
+                            workshopType: projectType
                         });
                     }
                     
                     const pattern = this.patterns.get(keyword);
                     pattern.count++;
                     
-                    // Calculate average duration based on project type
-                    const estimatedDuration = this.estimateDuration(description);
+                    // Calculate average duration based on project type and workshop knowledge
+                    const estimatedDuration = this.estimateDuration(description, projectType);
                     pattern.avgDuration = (pattern.avgDuration * (pattern.count - 1) + estimatedDuration) / pattern.count;
                 });
 
@@ -922,26 +1168,76 @@
                 this.generatePredictions();
             }
 
+            classifyProject(description) {
+                const desc = description.toLowerCase();
+                let scores = {};
+                
+                // Score each workshop type based on keywords
+                Object.keys(this.workshopKnowledge).forEach(type => {
+                    scores[type] = 0;
+                    const workshop = this.workshopKnowledge[type];
+                    
+                    // Check processes
+                    workshop.processes.forEach(process => {
+                        if (desc.includes(process.toLowerCase())) scores[type] += 3;
+                    });
+                    
+                    // Check materials
+                    workshop.materials.forEach(material => {
+                        if (desc.includes(material.toLowerCase())) scores[type] += 2;
+                    });
+                    
+                    // Check common projects
+                    workshop.projects.forEach(project => {
+                        if (desc.includes(project.toLowerCase())) scores[type] += 4;
+                    });
+                });
+
+                // Return the workshop type with highest score, or 'general' if no match
+                const maxScore = Math.max(...Object.values(scores));
+                if (maxScore > 0) {
+                    return Object.keys(scores).find(key => scores[key] === maxScore);
+                }
+                return 'general';
+            }
+
             extractKeywords(description) {
-                const commonWords = ['for', 'and', 'the', 'with', 'from', 'to', 'of', 'in', 'on', 'at', 'by'];
+                const commonWords = ['for', 'and', 'the', 'with', 'from', 'to', 'of', 'in', 'on', 'at', 'by', 'para', 'con', 'de', 'en', 'el', 'la', 'los', 'las'];
                 return description
                     .split(/\s+/)
-                    .filter(word => word.length > 3 && !commonWords.includes(word))
+                    .filter(word => word.length > 3 && !commonWords.includes(word.toLowerCase()))
                     .slice(0, 5); // Top 5 keywords
             }
 
-            estimateDuration(description) {
-                // Simple duration estimation based on keywords
+            estimateDuration(description, projectType = 'general') {
                 let baseDays = 7;
-                if (description.includes('flange')) baseDays += 3;
-                if (description.includes('complex')) baseDays += 5;
-                if (description.includes('urgent')) baseDays -= 2;
-                if (description.includes('simple')) baseDays -= 2;
-                return baseDays;
+                
+                // Use workshop knowledge for better estimation
+                if (this.workshopKnowledge[projectType]) {
+                    baseDays = this.workshopKnowledge[projectType].defaultTime / 8; // Convert hours to days
+                    
+                    // Apply complexity factors
+                    const desc = description.toLowerCase();
+                    if (desc.includes('simple') || desc.includes('básico')) {
+                        baseDays *= this.workshopKnowledge[projectType].timeFactors.simple;
+                    } else if (desc.includes('complejo') || desc.includes('difícil') || desc.includes('preciso')) {
+                        baseDays *= this.workshopKnowledge[projectType].timeFactors.complejo;
+                    } else {
+                        baseDays *= this.workshopKnowledge[projectType].timeFactors.medio;
+                    }
+                } else {
+                    // Fallback to original estimation
+                    if (description.includes('brida')) baseDays += 3;
+                    if (description.includes('complejo')) baseDays += 5;
+                    if (description.includes('urgente')) baseDays -= 2;
+                    if (description.includes('simple')) baseDays -= 2;
+                }
+                
+                return Math.max(1, Math.round(baseDays));
             }
 
             updateLearningProgress() {
-                this.learningProgress = Math.min(100, this.patterns.size * 10);
+                this.learningProgress = Math.min(100, (this.patterns.size * 8) + (customKnowledge.length * 5));
                 document.getElementById('ai-learning-progress').style.width = `${this.learningProgress}%`;
                 document.getElementById('learning-percentage').textContent = `${this.learningProgress}%`;
             }
@@ -949,13 +1245,31 @@
             generateInsights() {
                 this.insights = [];
                 
+                // Generate workshop-specific insights
+                const workshopDistribution = {};
+                for (const [keyword, data] of this.patterns) {
+                    const type = data.workshopType || 'general';
+                    workshopDistribution[type] = (workshopDistribution[type] || 0) + data.count;
+                }
+
+                const topWorkshop = Object.keys(workshopDistribution).reduce((a, b) => 
+                    workshopDistribution[a] > workshopDistribution[b] ? a : b
+                );
+
+                if (topWorkshop !== 'general' && this.workshopKnowledge[topWorkshop]) {
+                    this.insights.push({
+                        type: 'info',
+                        message: `El ${this.workshopKnowledge[topWorkshop].name} es tu equipo más utilizado. Considera optimizar los tiempos de setup para mejorar la eficiencia.`
+                    });
+                }
+                
                 // Generate insights based on patterns
                 for (const [keyword, data] of this.patterns) {
                     if (data.count > 2) {
                         if (data.avgDuration > 10) {
                             this.insights.push({
                                 type: 'warning',
-                                message: `Los proyectos con "${keyword}" tienden a tomar ${Math.round(data.avgDuration)} días en promedio. Considera agregar tiempo de buffer.`
+                                message: `Los proyectos con "${keyword}" tienden a tomar ${Math.round(data.avgDuration)} días. El tipo de taller recomendado es: ${this.workshopKnowledge[data.workshopType]?.name || 'General'}.`
                             });
                         }
                         
@@ -965,6 +1279,21 @@
                                 message: `¡Excelente! Los proyectos con "${keyword}" tienen una tasa de finalización del ${Math.round(data.completionRate * 100)}%.`
                             });
                         }
+                    }
+                }
+
+                // Custom knowledge insights
+                if (customKnowledge.length > 0) {
+                    const avgDifficulty = customKnowledge.reduce((sum, k) => {
+                        const diffValues = { facil: 1, medio: 2, dificil: 3, experto: 4 };
+                        return sum + (diffValues[k.difficulty] || 2);
+                    }, 0) / customKnowledge.length;
+
+                    if (avgDifficulty > 2.5) {
+                        this.insights.push({
+                            type: 'warning',
+                            message: `Tu base de conocimiento contiene principalmente procesos complejos. Considera documentar también procesos básicos para entrenar personal nuevo.`
+                        });
                     }
                 }
 
@@ -994,7 +1323,24 @@
                     if (riskProjects.length > 0) {
                         this.predictions.push({
                             type: 'warning',
-                            message: `${riskProjects.length} proyectos pueden estar en riesgo de retraso basándose en patrones históricos.`
+                            message: `${riskProjects.length} proyectos pueden estar en riesgo de retraso basándose en patrones históricos y conocimiento del taller.`
+                        });
+                    }
+                    
+                    // Workshop capacity prediction
+                    const workshopUsage = {};
+                    upcomingProjects.forEach(p => {
+                        const type = this.classifyProject(p.description.toLowerCase());
+                        workshopUsage[type] = (workshopUsage[type] || 0) + 1;
+                    });
+
+                    const maxUsage = Math.max(...Object.values(workshopUsage));
+                    const busyWorkshop = Object.keys(workshopUsage).find(k => workshopUsage[k] === maxUsage);
+                    
+                    if (maxUsage > 3 && this.workshopKnowledge[busyWorkshop]) {
+                        this.predictions.push({
+                            type: 'info',
+                            message: `El ${this.workshopKnowledge[busyWorkshop].name} tendrá alta demanda con ${maxUsage} proyectos programados. Planifica la carga de trabajo.`
                         });
                     }
                 }
@@ -1019,6 +1365,28 @@
             getAIResponse(userMessage) {
                 const message = userMessage.toLowerCase();
                 
+                // Workshop-specific responses
+                Object.keys(this.workshopKnowledge).forEach(type => {
+                    if (message.includes(type) || message.includes(this.workshopKnowledge[type].name.toLowerCase())) {
+                        const workshop = this.workshopKnowledge[type];
+                        return `${workshop.name} es ideal para: ${workshop.projects.join(', ')}. Los procesos incluyen: ${workshop.processes.join(', ')}. Tiempo promedio de proyecto: ${workshop.defaultTime} horas.`;
+                    }
+                });
+
+                if (message.includes('proceso') || message.includes('mecanizado') || message.includes('máquina')) {
+                    return `Nuestro taller incluye: Torno (piezas cilíndricas), Fresadora (superficies complejas), Rectificadora (acabados de precisión), CNC (geometrías complejas), y sistemas de Automatización. ¿Qué tipo de proyecto tienes en mente?`;
+                }
+
+                if (message.includes('material') && message.includes('qué')) {
+                    const materials = new Set();
+                    Object.values(this.workshopKnowledge).forEach(w => w.materials.forEach(m => materials.add(m)));
+                    return `Trabajamos con estos materiales: ${Array.from(materials).join(', ')}. ¿Qué material específico necesitas mecanizar?`;
+                }
+
+                if (message.includes('tiempo') || message.includes('duración') || message.includes('cuanto tarda')) {
+                    return `Los tiempos dependen del tipo de proyecto: Torno (4h), Fresadora (6h), Rectificadora (8h), CNC (12h), Automatización (24h+). Estos son tiempos base que varían según la complejidad.`;
+                }
+
                 if (message.includes('proyecto') && (message.includes('estado') || message.includes('status'))) {
                     return `Actualmente tienes ${allProjects.length} proyectos activos. ${allProjects.filter(p => {
                         const dueDate = p.dueDate.toDate();
@@ -1028,18 +1396,32 @@
                 }
                 
                 if (message.includes('insight') || message.includes('análisis') || message.includes('analisis')) {
-                    return `Basándome en tus patrones de proyectos, he identificado ${this.patterns.size} patrones clave. Los tipos de proyectos más comunes son: ${Array.from(this.patterns.keys()).slice(0, 3).join(', ')}.`;
+                    return `Basándome en tus patrones de proyectos y conocimiento del taller, he identificado ${this.patterns.size} patrones clave. Los tipos de proyectos más comunes son: ${Array.from(this.patterns.keys()).slice(0, 3).join(', ')}.`;
                 }
                 
                 if (message.includes('predicción') || message.includes('prediccion') || message.includes('forecast')) {
-                    return `Predigo que completarás aproximadamente ${Math.round(allProjects.length * 0.85)} proyectos a tiempo este mes basándome en la carga de trabajo actual y datos históricos.`;
+                    return `Predigo que completarás aproximadamente ${Math.round(allProjects.length * 0.85)} proyectos a tiempo este mes basándome en la carga de trabajo actual y datos históricos del taller.`;
+                }
+
+                if (message.includes('conocimiento') || message.includes('base') || message.includes('enseñar')) {
+                    return `Tengo ${customKnowledge.length} conocimientos personalizados del taller. Puedes agregar más en la pestaña "Base de Conocimiento" para que aprenda sobre tus procesos específicos.`;
                 }
                 
                 if (message.includes('ayuda') || message.includes('help') || message.includes('qué puedes hacer') || message.includes('que puedes hacer')) {
-                    return `Puedo ayudarte a analizar patrones de proyectos, predecir tiempos de finalización, identificar riesgos, optimizar la asignación de recursos y proporcionar insights basados en tu historial de proyectos. ¿Qué te gustaría saber?`;
+                    return `Puedo ayudarte con: análisis de proyectos de mecanizado, recomendaciones de equipos (torno, fresadora, rectificadora, CNC, automatización), estimación de tiempos, optimización de procesos, y gestión de conocimiento del taller. ¿Qué te gustaría saber?`;
                 }
                 
-                return `Entiendo que estás preguntando sobre "${userMessage}". Basándome en los datos de tus proyectos, puedo proporcionar insights, predicciones o análisis. ¿Podrías ser más específico sobre lo que te gustaría saber?`;
+                return `Entiendo que estás preguntando sobre "${userMessage}". Como especialista en talleres de mecanizado, puedo ayudarte con procesos de torno, fresadora, rectificadora, CNC y automatización. ¿Podrías ser más específico?`;
+            }
+
+            addCustomKnowledge(knowledge) {
+                customKnowledge.push({
+                    ...knowledge,
+                    id: Date.now().toString(),
+                    createdAt: new Date()
+                });
+                this.updateLearningProgress();
+                this.generateInsights();
             }
         }
 
@@ -1142,6 +1524,59 @@
             if (diffDays === 1) return { text: 'Vence mañana', class: 'due-soon' };
             if (diffDays <= 3) return { text: `Vence en ${diffDays} días`, class: 'due-soon' };
             return { text: `Vence en ${diffDays} días`, class: '' };
+        };
+
+        const renderKnowledgeEntry = (knowledge) => {
+            const difficultyColors = {
+                facil: { bg: '#dcfce7', text: '#166534', icon: '#22c55e' },
+                medio: { bg: '#dbeafe', text: '#1e40af', icon: '#3b82f6' },
+                dificil: { bg: '#fed7aa', text: '#c2410c', icon: '#f97316' },
+                experto: { bg: '#fecaca', text: '#dc2626', icon: '#ef4444' }
+            };
+            const colors = difficultyColors[knowledge.difficulty] || difficultyColors.medio;
+            
+            return `
+                <div class="bg-white p-6 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background-color: ${colors.icon}">
+                                <i class="fas fa-cog text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">${knowledge.topic}</h4>
+                                <span class="text-sm text-slate-500 capitalize">${knowledge.category.replace('-', ' ')}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs rounded-full capitalize" style="background-color: ${colors.bg}; color: ${colors.text}">${knowledge.difficulty}</span>
+                            ${knowledge.time ? `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">${knowledge.time}h</span>` : ''}
+                            <button class="delete-knowledge-btn text-slate-400 hover:text-red-500 transition-colors" data-id="${knowledge.id}">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">${knowledge.content}</p>
+                    <div class="mt-3 text-xs text-slate-400">
+                        Agregado: ${knowledge.createdAt.toLocaleDateString('es-ES')}
+                    </div>
+                </div>
+            `;
+        };
+
+        const updateKnowledgeDisplay = () => {
+            if (customKnowledge.length === 0) {
+                knowledgeEntries.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-book text-slate-400 text-xl"></i>
+                        </div>
+                        <p class="text-slate-500">No hay conocimientos personalizados aún</p>
+                        <p class="text-sm text-slate-400">Agrega tu primer conocimiento arriba</p>
+                    </div>
+                `;
+            } else {
+                knowledgeEntries.innerHTML = customKnowledge.map(renderKnowledgeEntry).join('');
+            }
         };
         
         const renderProject = (project) => {
@@ -1339,6 +1774,28 @@
             }
         });
 
+        knowledgeInputForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const knowledgeData = {
+                category: document.getElementById('knowledge-category').value,
+                topic: document.getElementById('knowledge-topic').value,
+                content: document.getElementById('knowledge-content').value,
+                difficulty: document.getElementById('knowledge-difficulty').value,
+                time: document.getElementById('knowledge-time').value
+            };
+            
+            if (!knowledgeData.category || !knowledgeData.topic || !knowledgeData.content) {
+                showNotification('Por favor completa todos los campos requeridos.', 'warning');
+                return;
+            }
+            
+            aiSystem.addCustomKnowledge(knowledgeData);
+            updateKnowledgeDisplay();
+            knowledgeInputForm.reset();
+            showNotification('¡Conocimiento agregado exitosamente! La IA ahora sabe más sobre tu taller.', 'success');
+        });
+
         projectList.addEventListener('click', async (e) => {
             if (e.target.closest('.delete-btn')) {
                 const id = e.target.closest('.delete-btn').dataset.id;
@@ -1348,6 +1805,20 @@
                 } catch (error) {
                     console.error("Error removing document: ", error);
                     showNotification('Error al eliminar proyecto.', 'error');
+                }
+            }
+        });
+
+        // Knowledge base delete functionality
+        knowledgeEntries.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-knowledge-btn')) {
+                const id = e.target.closest('.delete-knowledge-btn').dataset.id;
+                const index = customKnowledge.findIndex(k => k.id === id);
+                if (index !== -1) {
+                    customKnowledge.splice(index, 1);
+                    updateKnowledgeDisplay();
+                    aiSystem.updateLearningProgress();
+                    showNotification('Conocimiento eliminado exitosamente.', 'success');
                 }
             }
         });
@@ -1377,6 +1848,9 @@
                         projects.forEach(project => {
                             aiSystem.analyzeProject(project);
                         });
+                        
+                        // Initialize knowledge base display
+                        updateKnowledgeDisplay();
                     });
                 }
             });
