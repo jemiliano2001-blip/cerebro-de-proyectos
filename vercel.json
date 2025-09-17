@@ -1,20 +1,8 @@
 {
-  "version": 2,
-  "name": "reminder-app",
-  "builds": [
+  "rewrites": [
     {
-      "src": "reminder.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/reminder.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/",
+      "destination": "/index.html"
     }
   ],
   "headers": [
