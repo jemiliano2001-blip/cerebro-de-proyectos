@@ -3347,7 +3347,15 @@
         
         // --- Firebase Configuration ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-workshop-bot';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6aTV9nIYz4_QdZRs-Bx5pLScI8lmY_ag",
+            authDomain: "cerebro-proyecto-smv.firebaseapp.com",
+            projectId: "cerebro-proyecto-smv",
+            storageBucket: "cerebro-proyecto-smv.firebasestorage.app",
+            messagingSenderId: "899383982708",
+            appId: "1:899383982708:web:247457d9c08436b6b3ef21",
+            measurementId: "G-MD27C2HZ79"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let db, auth;
@@ -5182,14 +5190,11 @@
 
             // Add team member
             addMemberBtn.addEventListener('click', () => {
-                const name = prompt('Nombre del miembro:');
-                const phone = prompt('Número de teléfono (con código país):');
-                
-                if (name && phone) {
-                    whatsappManager.addTeamMember(name, phone);
-                    updateTeamMembersDisplay();
-                    showNotification('Miembro agregado exitosamente', 'success');
-                }
+                document.getElementById('add-member-modal').classList.remove('hidden');
+                // Clear form
+                document.getElementById('add-member-name').value = '';
+                document.getElementById('add-member-phone').value = '';
+                document.getElementById('add-member-notifications').checked = true;
             });
 
             // Test all notifications
@@ -6044,6 +6049,41 @@
                     document.getElementById('edit-member-modal').classList.add('hidden');
                 }
             });
+
+            // Handle add team member modal
+            document.getElementById('close-add-modal').addEventListener('click', () => {
+                document.getElementById('add-member-modal').classList.add('hidden');
+            });
+
+            document.getElementById('cancel-add').addEventListener('click', () => {
+                document.getElementById('add-member-modal').classList.add('hidden');
+            });
+
+            document.getElementById('add-member-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('add-member-name').value.trim();
+                const phone = document.getElementById('add-member-phone').value.trim();
+                const notifications = document.getElementById('add-member-notifications').checked;
+                
+                if (name && phone) {
+                    // Add member with notification preference
+                    whatsappManager.teamMembers.push({
+                        name: name,
+                        phone: phone,
+                        notifications: notifications
+                    });
+                    updateTeamMembersDisplay();
+                    document.getElementById('add-member-modal').classList.add('hidden');
+                    showNotification('Miembro agregado exitosamente', 'success');
+                }
+            });
+
+            // Close add modal when clicking outside
+            document.getElementById('add-member-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'add-member-modal') {
+                    document.getElementById('add-member-modal').classList.add('hidden');
+                }
+            });
         }
 
         function hideAllConfigSections() {
@@ -6751,6 +6791,43 @@
         main();
         }
     </script>
+
+    <!-- Add Team Member Modal -->
+    <div id="add-member-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-slate-800">Agregar Nuevo Miembro</h3>
+                <button id="close-add-modal" class="text-slate-400 hover:text-slate-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="add-member-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Nombre completo</label>
+                    <input type="text" id="add-member-name" class="modern-input w-full" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Teléfono</label>
+                    <input type="tel" id="add-member-phone" class="modern-input w-full" placeholder="Ej: +52 555 123 4567" required>
+                    <p class="text-xs text-slate-500 mt-1">Incluye el código de país (+52 para México)</p>
+                </div>
+                <div class="mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="add-member-notifications" class="mr-2 rounded" checked>
+                        <span class="text-sm text-slate-700">Activar notificaciones para este miembro</span>
+                    </label>
+                </div>
+                <div class="flex space-x-4">
+                    <button type="button" id="cancel-add" class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <i class="fas fa-plus mr-2"></i>Agregar Miembro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Team Member Edit Modal -->
     <div id="edit-member-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
