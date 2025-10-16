@@ -19,7 +19,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="firebase-config.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -4692,7 +4691,7 @@
                 showNotification(`Bienvenido, ${user.email}`, 'success');
                 
                 // Initialize app data
-                initializeApp();
+                initializeAppData();
                 
             } catch (error) {
                 console.error('Login error:', error);
@@ -6226,7 +6225,7 @@
                 if (user) {
                     // User is signed in, hide login modal and show app
                     hideLoginModal();
-                    initializeApp();
+                    initializeAppData();
                 } else {
                     // User is signed out, show login modal
                     showLoginModal();
@@ -6235,7 +6234,7 @@
         }
 
         // Initialize app data after authentication
-        function initializeApp() {
+        function initializeAppData() {
             if (auth && projectsCollection) {
                 const q = query(projectsCollection, orderBy("dueDate", "asc"));
                 onSnapshot(q, (snapshot) => {
